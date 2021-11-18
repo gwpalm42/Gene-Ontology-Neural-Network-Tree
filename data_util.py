@@ -199,7 +199,12 @@ def make_prediction_file(kmer_to_GO_dict, neural_tree):
         for i in range(len(kmer_to_GO_dict['labels'])):
             file.write('predicted hierarchy: ')
             file.write('\n')
-            nt.neural_tree_predict_tofile(kmer_to_GO_dict['features'][i], neural_tree, file)
+            prediction = nt.neural_tree_predict(kmer_to_GO_dict['features'][i], neural_tree)
+            leng = len(prediction)
+            if prediction[leng-7:leng-1] == prediction[leng-16:leng-10]:
+                prediction = prediction[0:leng-7]
+            file.write(prediction)
+            file.write('\n')
             file.write('\n')
             file.write('correct hierarchies: ')
             file.write('\n')
@@ -209,6 +214,7 @@ def make_prediction_file(kmer_to_GO_dict, neural_tree):
                         file.write(term + ' ')
                     file.write('\n')
                 else:
-                    file.write("this term is obsolete, ignore prediction")
+                    file.write("encountered obsolote GO term")
                     file.write('\n')
+            file.write('-----------------------------------------------------------------------')
             file.write('\n')

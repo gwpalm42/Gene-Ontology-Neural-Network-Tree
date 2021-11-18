@@ -81,48 +81,26 @@ def trim_first_terms(labels, learn_labels):
         labels = np.delete(labels, np.asarray(deletions), 0)
         learn_labels = np.delete(learn_labels, np.asarray(deletions), 0)
     return labels, learn_labels
-########################PREDICTION###############################################
+
+####################### PREDICTION ##############################################
 ''' 
 prediction method for the neural tree.
 '''
-def neural_tree_predict(feature, root):
-    print('0003674  ', end = '')
-    recursive_prediction(feature, root)
-    print("")
+def neural_tree_predict(feature, root) -> str:
+    final_prediction = '0003674  '
+    return recursive_prediction(feature, root, final_prediction)
 '''
 Recursive prediction helper method
 '''
-def recursive_prediction(feature, root:neural_node): 
+def recursive_prediction(feature, root:neural_node, final_prediction: str) -> str: 
     if root.is_leaf:
-        print(root.GO_term + '  ', end = '')
-        return root.GO_term
+        final_prediction = final_prediction + root.GO_term
+        return final_prediction
     else:
         prediction = np.argmax(root.neural_network.predict(np.array([feature,])))
         GO_term = root.GO_stdlabels[prediction]
-        print(GO_term + '  ', end = '')
+        final_prediction = final_prediction + GO_term + '  '
         for node in root.children:
             if node.GO_term == GO_term:
-                recursive_prediction(feature, node)
+                return recursive_prediction(feature, node, final_prediction)
 
-###################### WRITE PREDICTIONS TO FILE ###################################
-'''             
-prediction method for the neural tree.
-'''
-def neural_tree_predict_tofile(feature, root, file):
-    file.write('0003674  ')
-    recursive_prediction_tofile(feature, root, file)
-    file.write('\n')
-'''
-Recursive prediction helper method
-'''
-def recursive_prediction_tofile(feature, root:neural_node, file): 
-    if root.is_leaf:
-        file.write(root.GO_term + '  ')
-        return root.GO_term
-    else:
-        prediction = np.argmax(root.neural_network.predict(np.array([feature,])))
-        GO_term = root.GO_stdlabels[prediction]
-        file.write(GO_term + '  ')
-        for node in root.children:
-            if node.GO_term == GO_term:
-                recursive_prediction_tofile(feature, node, file)
