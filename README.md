@@ -1,2 +1,2 @@
-# CBB - Identify Gene Function
+# GONNT - Predict Unknown Gene Function
 
